@@ -15,4 +15,6 @@ commands_music = ["who be juan join",
                   "who be juan leave",
                   "who be juan play",
                   "who be juan resume",
-                  "who be juan pause"]
+                  "who be juan pause",
+                  "who be juan stop"
+                  ]

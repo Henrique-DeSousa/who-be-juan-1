@@ -65,6 +65,8 @@ class Responses:
                           "F.B.I. open up!"
                           ]
 
+
+
     def __init__(self, message):
         pig_enri = "```" + cowsay.get_output_string("pig", "macacos?") + "```"
         self.responses_enri = ["https://c.tenor.com/lVLSSglhk1cAAAAC/monkey-cymbals.gif",
@@ -98,3 +100,8 @@ class Responses:
                                "levas com a garrafa",
                                f"Olha {message.author.mention}... sobes e saltas",
                                "Não quero"]
+
+        self.responses_trash = [f"Bruh,{message.author.mention} shut yo ass",
+                                f"Juan, at your service Señor{message.author.mention}",
+                                "Bruh, really? You can do better. Com'on",
+                                "Anything else, you trash"]

@@ -2,8 +2,8 @@ import discord
 import random
 import pyjokes
 import cowsay
-import youtube_dl
-from discord import client
+from youtube_dl import YoutubeDL
+from discord import client, FFmpegPCMAudio
 from google_translator_simplified import Translator
 
 import config
@@ -16,7 +16,7 @@ class MyBot(discord.Client):
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))
         channel = discord.utils.get(client.get_all_channels(), name="general")
-        await client.get_channel(channel.id).send("Ahhh shit here we go again...")
+        await client.get_channel(channel.id).send("Ah shit, here we go again...")
 
     async def on_message(self, message):
 
@@ -80,7 +80,7 @@ class MyBot(discord.Client):
             """
 
         elif message.content == commands_list[10]:
-            number = random.randint(0, len(responses.responses_flirt)-1)
+            number = random.randint(0, len(responses.responses_flirt) - 1)
             await message.channel.send(responses.responses_flirt[number])
 
         elif message.content.startswith(commands_list[11]):
@@ -89,6 +89,7 @@ class MyBot(discord.Client):
             await message.channel.send(Translator.get_translation('pt', translate, detected_language))
 
 
+        #class music bot
         elif message.content.startswith(commands.commands_music[0]):
             if message.author.voice is None:
                 await message.channel.send("Please join a voice channel to use this command")
@@ -106,33 +107,51 @@ class MyBot(discord.Client):
                 """
                 NAO MEXER... NAO ME PERGUNTEM PK MAS FUNCIONA
                 """
-# TODO tenatar ver pk que nao reconhece o ffmpeg
+        # TODO tenatar ver pk que nao reconhece o ffmpeg
         elif message.content.startswith(commands.commands_music[2]):
-            FFMPEG_OPTIONS = {'before_option': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
-                              'options': '-vn'}
-            YDL_OPTIONS = {'format': 'bestaudio/best'}
             vc = voice_client
-            with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
-                print(message.content[17:])
-                info = ydl.extract_info(message.content[17:], download=False)
-                url2 = info['formats'][0]['url']
-                print(url2)
+            YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist': 'True'}
+            FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
+                              'options': '-vn'}
 
-                vc.play(discord.FFmpegPCMAudio(executable="./ffmpeg", source=url2))
-                #source = await discord.FFmpegPCMAudio(executable="ffmpeg", source=url2)
-                #vc.play(source)
+            if not vc.is_playing():
+                with YoutubeDL(YDL_OPTIONS) as ydl:
+                    url = message.content[17:]
+                    info = ydl.extract_info(url, download=False)
+                    URL = info['url']
+                    vc.play(FFmpegPCMAudio(URL, **FFMPEG_OPTIONS))
+                    vc.is_playing()
+
+        elif message.content.startswith(commands.commands_music[4]):
+            vc = voice_client
+            if vc.is_playing():
+                vc.pause()
+                await message.channel.send("Bruh, you really paused me to talk trash? SMH")
+
+        elif message.content.startswith(commands.commands_music[3]):
+            vc = voice_client
+            if not vc.is_playing():
+                vc.resume()
+                await message.channel.send("Man, shut yo ass. Imma just resume this beat")
+
+        elif message.content.startswith(commands.commands_music[5]):
+            vc = voice_client
+            if vc.is_playing():
+                vc.stop()
+                await message.channel.send("A'igh, imma headout. But I'm taking this beat with me")
 
         if "jura" in message.content:
             await message.channel.send("JUROOOO")
 
-        if any(response in message.content for response in responses.responses_censured) and not (message.author == self.user):
-            number = random.randint(0,len(responses.responses_cen)-1)
+        if any(response in message.content for response in responses.responses_censured) and not (
+                message.author == self.user):
+            number = random.randint(0, len(responses.responses_cen) - 1)
             await message.channel.send(responses.responses_cen[number])
 
         if "wtf" in message.content:
             await message.channel.send("Tem calma colega")
 
-        if "NAO" in message.content:
+        if "NAO" in message.content.upper():
             await message.channel.send("SIMMMMM")
 
         if "school shooting" in message.content:
@@ -160,6 +179,12 @@ class MyBot(discord.Client):
 
         if "imagina" in message.content and not (message.author == self.user):
             await message.channel.send("Mas imagina mesmo!!")
+
+        if message.content not in commands.commands and not (message.author == self.user):
+            number = random.randint(0, 100)
+            if number >= 90:
+                kek = random.randint(0, len(responses.responses_trash) - 1)
+                await message.channel.send(responses.responses_trash[kek])
 
     async def on_member_join(self, member):
         guild = member.guild
