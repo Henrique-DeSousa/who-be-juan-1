@@ -4,7 +4,7 @@ import pyjokes
 import cowsay
 from youtube_dl import YoutubeDL
 from discord import client, FFmpegPCMAudio
-from google_translator_simplified import Translator
+#from google_translator_simplified import Translator
 
 import config
 import Lists
@@ -83,10 +83,10 @@ class MyBot(discord.Client):
             number = random.randint(0, len(responses.responses_flirt) - 1)
             await message.channel.send(responses.responses_flirt[number])
 
-        elif message.content.startswith(commands_list[11]):
-            translate = message.content[22:]
-            detected_language = Translator.detect_lang(translate)
-            await message.channel.send(Translator.get_translation('pt', translate, detected_language))
+       # elif message.content.startswith(commands_list[11]):
+       #     translate = message.content[22:]
+        #    detected_language = Translator.detect_lang(translate)
+       #     await message.channel.send(Translator.get_translation('pt', translate, detected_language))
 
 
         #class music bot

@@ -62,8 +62,15 @@ class Responses:
                           "Bora!",
                           "Eu fico com o Figueira!",
                           "Tenso",
-                          "F.B.I. open up!"
+                          "F.B.I. open up!",
+                          "Vai tu primeiro, eu sigo-te"
                           ]
+
+    responses_music = ["Man, shut yo ass. Imma just resume this beat",
+                       "Imma just resume this, not because you told me",
+                       "Bruh, stop talking trash."
+                       ]
+
 
 
 
